@@ -48,22 +48,10 @@ async function getPosts(): Promise<Array<Post>> {
 async function createPost(post: PostContent): Promise<Post> {
     // create a new post
     // [TODO] remove this return to use a fetch API
-    const requestPost = {
-        method:'POST',
-        id: 1,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-            title: 'React POST Request Example', 
-            userId: 1,
-            bodypost: 'body',
-            postImageUrl: 'https://picsum.photos/1280/960',        
-        }),
+    
+    const {data} = await axios.post(`${base_url}`, post)
 
-    };
-    const response = await fetch(base_url, requestPost)
-    const dataPosts = await response.json();
-
-    return dataPosts
+    return data
 
     // return {
     //     id: 1,
@@ -77,19 +65,16 @@ async function createPost(post: PostContent): Promise<Post> {
 async function updatePost(post: Post): Promise<Post> {
     // update a existing post
     // [TODO] remove this return to use a fetch API
-    return {
-        id: 1,
-        title: 'title',
-        userId: 1,
-        body: 'body',
-        postImageUrl: 'https://picsum.photos/1280/960',
-    }
+    const {data} = await axios.put(`${base_url}/${post.id}`, post)
+    return data
 }
 
 async function deletePost(postID: Post['id']): Promise<Post['id']> {
     // delete a existing post
     // [TODO] remove this return to use a fetch API
-    return 1
+    const {data} = await axios.delete(`${base_url}/${postID}`)
+
+    return data
 }
 
 export { getPost, getPosts, deletePost, updatePost, createPost }

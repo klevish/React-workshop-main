@@ -3,7 +3,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Picker_Picture, Post, PostContent, User } from '../api/types'
 import Field from '../private/Field'
 import ImageGalleryPicker from './ImageGalleryPicker'
-import {getPost} from '../api/post'
+import {getPost, updatePost, createPost, deletePost,} from '../api/post'
+import {getUser, getAllUser} from '../api/user'
 
 type FormEvent =
     | React.ChangeEvent<HTMLTextAreaElement>
@@ -35,10 +36,23 @@ const EditPost = () => {
         console.log(data)
     }
     
-
+    
     useEffect(() => {
         _getPost(Number(id))
     }, [id]);
+
+    async function _getUsers() {
+        const data = await getAllUser();
+        setUsers(data);
+    }
+    
+    useEffect(() => {
+        _getUsers()
+    }, []);
+
+
+
+
 
     function handleModalPictureSubmit(picture: Picker_Picture) {
         setFormData({
@@ -50,14 +64,20 @@ const EditPost = () => {
     async function handleAddOrCreatePost(
         event: React.FormEvent<HTMLFormElement>
     ) {
-        // remove default reloading page
         event.preventDefault()
+        if(id) {
+            await updatePost(formData as Post)
+        } else {
+            await createPost(formData)
+        }
+        // // remove default reloading page
 
-        // back to Home
+        // // back to Home
         navigate('/')
     }
 
     async function handleDeletePost() {
+        await deletePost(Number(id))
         // back to Home
         navigate('/')
     }
